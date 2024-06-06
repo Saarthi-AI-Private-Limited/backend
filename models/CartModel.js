@@ -1,30 +1,35 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
-
-const cartSchema = new Schema({
-  name: {
-    type: String,
+const cartItemSchema = new Schema({
+  product_id: {
+    type: Schema.Types.ObjectId,
+    ref: "Product",
     required: true,
   },
-  date: {
-    type: Date,
-    required: true,
-  },
-  status: {
-    type: String,
-    required: true,
-  },
-  user: {
-    type: String,
-    required: true,
-  },
+  quantity: { type: Number, required: true },
+  price: { type: Number, required: true },
 });
 
-const CartSet = mongoose.model("CartSet", cartSchema);
+const cartSchema = new Schema(
+  {
+    token: { type: String, required: true },
+    user_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    items: [cartItemSchema],
+    total_amount: { type: Number, required: true },
+  },
+  { timestamps: true }
+);
+
+const CartModel = mongoose.model("Cart", cartSchema);
 
 if (!CartSet) {
   throw new Error("Failed to create CartSet model");
 }
 
-export default CartSet; //export postschema with the name posts
-//this the name saved on the db as collection ------------ posts
+export default CartModel;
+
+// chirag

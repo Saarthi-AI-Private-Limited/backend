@@ -13,7 +13,6 @@ const userSchema = new Schema({
   },
   email: {
     type: String,
-    required: true,
   },
   address: {
     type: String,
@@ -37,5 +36,9 @@ const userSchema = new Schema({
   },
 });
 
-const user = mongoose.model("UserSet", userSchema); //collection name in database: user
-export default user;
+const UserModel = mongoose.model("User", userSchema); //collection name in database: user
+export default UserModel;
+
+
+// chirag
+

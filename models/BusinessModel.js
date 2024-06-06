@@ -1,24 +1,32 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-const businessSchema = Schema({
-  name: {
-    type: String,
+const storeSchema = new Schema(
+  {
+    store_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+    },
+    Store_name: { type: String, required: true },
+    address: { type: String, required: true },
+    phoneNumber: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+    },
+    password: {
+      type: String,
+    },
+    gst_no: { type: String, required: true },
+    orders: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order" }],
+    products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+    pan_no: { type: String, required: true },
   },
-  address: {
-    type: String,
-  },
-  phonenumber: {
-    type: String,
-  },
-  email: {
-    type: String,
-  },
-  password: {
-    type: String,
-  },
-});
+  { timestamps: true }
+);
 
-const BusinessSet = model("BusinessSet", businessSchema);
+const StoreModel = model("Store", storeSchema);
 
-export default BusinessSet;
+export default StoreModel;
