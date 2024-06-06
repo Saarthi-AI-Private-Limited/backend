@@ -1,56 +1,75 @@
-import { Router } from "express";
-import CartSet from "../models/CartModel.js";
+import express from "express";
+import CartModel from "../models/Cart";
+import auth from "../middleware/auth";
 
-const router = Router();
+const router = express.Router();
 
-router.get("/cart/cartDetails", async (req, res) => {
+// Add item to cart
+router.post("/add", auth, async (req, res) => {
+  const { product_id, quantity, price } = req.body;
+  const { token } = req.headers;
+
   try {
-    const result = await CartSet.find();
-    res.send(result);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
+    const cart = await CartModel.findOneAndUpdate(
+      { token, user_id: req.user.id },
+      {
+        $push: { items: { product_id, quantity, price } },
+        $inc: { total_amount: quantity * price },
+      },
+      { upsert: true, new: true }
+    );
+
+    res.status(200).json(cart);
+  } catch (error) {
+    res.status(500).send("Server error");
   }
 });
 
-router.post("/cart/addnewcart", async (req, res) => {
-  try {
-    const { cartName } = req.body;
-    if (!cartName) {
-      return res.status(400).json({ error: "Missing cartName" });
-    }
-    const cartUser = "NaN";
-    const cartAvailable = "free";
-    const cartDate = new Date();
+// Remove item from cart
+router.delete("/remove", auth, async (req, res) => {
+  const { product_id } = req.body;
+  const { token } = req.headers;
 
-    const cartAdd = new CartSet({
-      name: cartName,
-      date: cartDate,
-      status: cartAvailable,
-      user: cartUser,
-    });
-    const data = await cartAdd.save();
-    res.json(data);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
+  try {
+    const cart = await CartModel.findOneAndUpdate(
+      { token, user_id: req.user.id },
+      { $pull: { items: { product_id } } },
+      { new: true }
+    );
+
+    res.status(200).json(cart);
+  } catch (error) {
+    res.status(500).send("Server error");
   }
 });
 
-router.delete("/cart/delete/:cartId", async (req, res) => {
+// Update cart item
+router.put("/update", auth, async (req, res) => {
+  const { product_id, quantity, price } = req.body;
+  const { token } = req.headers;
+
   try {
-    const { cartId } = req.params;
-    if (!cartId) {
-      return res.status(400).json({ error: "Missing cartId" });
-    }
-    const cartdata = CartSet.remove({ _id: cartId });
-    const result = await Promise.all([cartdata]);
-    res.status(200).json({
-      message: "deleted",
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
+    const cart = await CartModel.findOne({ token, user_id: req.user.id });
+
+    // Find the index of the item to be updated
+    const index = cart.items.findIndex(
+      (item) => item.product_id === product_id
+    );
+    if (index === -1)
+      return res.status(404).json({ msg: "Item not found in cart" });
+
+    // Update the quantity and price of the item and recalculate the total amount
+    const prevQuantity = cart.items[index].quantity;
+    const prevPrice = cart.items[index].price;
+    cart.items[index].quantity = quantity;
+    cart.items[index].price = price;
+    cart.total_amount -= prevQuantity * prevPrice;
+    cart.total_amount += quantity * price;
+
+    await cart.save();
+    res.status(200).json(cart);
+  } catch (error) {
+    res.status(500).send("Server error");
   }
 });
 

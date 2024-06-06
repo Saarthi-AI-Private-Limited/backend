@@ -7,7 +7,7 @@ const storeSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: true,
     },
-    Store_name: { type: String, required: true },
+    store_name: { type: String, required: true },
     address: { type: String, required: true },
     phoneNumber: {
       type: String,
