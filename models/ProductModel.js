@@ -11,15 +11,18 @@ const priceSchema = new Schema({
   stock: { type: Number, required: true },
 });
 
-const productSchema = new Schema({
-  name: { type: String, required: true },
-  category: { type: String, required: true },
-  sku: { type: String, required: true },
-  image: { type: String, required: true },
-  description: { type: String, required: true },
-  prices: [priceSchema],
-  stock_quantity: Number,
-});
+const productSchema = new Schema(
+  {
+    name: { type: String, required: true },
+    category: { type: String, required: true },
+    sku: { type: String, required: true },
+    image: { type: String, required: true },
+    description: { type: String, required: true },
+    prices: [priceSchema],
+    stock_quantity: Number,
+  },
+  { timestamps: true }
+);
 
 const ProductModel = new mongoose.model("Product", productSchema);
 

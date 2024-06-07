@@ -1,19 +1,20 @@
-import express from 'express';
-import bcrypt from 'bcrypt';
-import UserModel from '../models/UserModel.js';
-import auth from '../middleware/auth.js';
+import express from "express";
+import bcrypt from "bcrypt";
+import UserModel from "../models/UserModel.js";
+import auth from "../middleware/auth.js";
 
 const router = express.Router();
 
 // Register a new user
-router.post('/register', async (req, res) => {
-  const { firstname, lastname, email, address, phoneNumber, password } = req.body;
+router.post("/register", async (req, res) => {
+  const { firstname, lastname, email, address, phoneNumber, password } =
+    req.body;
 
   try {
     // Check if user already exists
     let user = await UserModel.findOne({ email });
     if (user) {
-      return res.status(400).json({ msg: 'User already exists' });
+      return res.status(400).json({ msg: "User already exists" });
     }
 
     // Create new user
@@ -23,11 +24,11 @@ router.post('/register', async (req, res) => {
       email,
       address,
       phoneNumber,
-      password
+      password,
     });
-
+    console.log(req.body);
     // Hash password
-    // TODO: Add password strength validation and hashing on the frontend 
+    // TODO: Add password strength validation and hashing on the frontend
 
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
@@ -35,29 +36,31 @@ router.post('/register', async (req, res) => {
     // Save user
     await user.save();
 
-    res.status(201).send('User created successfully');
+    res.status(201).send("User created successfully");
   } catch (error) {
-    res.status(500).send('Server error');
+    res.status(500).send("Server error");
   }
 });
 
 // User login (Firebase handles this, so we just return a success message)
-router.post('/login', async (req, res) => {
-  res.send('Login handled by Firebase');
+router.post("/login", async (req, res) => {
+  res.send("Login handled by Firebase");
 });
 
 // Fetch user profile
-router.get('/profile', auth, async (req, res) => {
+router.get("/profile", auth, async (req, res) => {
   try {
-    const user = await UserModel.findOne({ email: req.user.email }).select('-password');
+    const user = await UserModel.findOne({ email: req.user.email }).select(
+      "-password"
+    );
     res.json(user);
   } catch (error) {
-    res.status(500).send('Server error');
+    res.status(500).send("Server error");
   }
 });
 
 // Update user profile
-router.put('/profile', auth, async (req, res) => {
+router.put("/profile", auth, async (req, res) => {
   const { firstname, lastname, email, address, phoneNumber } = req.body;
 
   const profileFields = {};
@@ -78,9 +81,9 @@ router.put('/profile', auth, async (req, res) => {
       );
       return res.json(user);
     }
-    res.status(404).json({ msg: 'User not found' });
+    res.status(404).json({ msg: "User not found" });
   } catch (error) {
-    res.status(500).send('Server error');
+    res.status(500).send("Server error");
   }
 });
 

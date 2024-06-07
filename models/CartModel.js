@@ -24,9 +24,9 @@ const cartSchema = new Schema(
   { timestamps: true }
 );
 
-const CartModel = mongoose.model("Cart", cartSchema);
+const CartModel = new mongoose.model("Cart", cartSchema);
 
-if (!CartSet) {
+if (!CartModel) {
   throw new Error("Failed to create CartSet model");
 }
 

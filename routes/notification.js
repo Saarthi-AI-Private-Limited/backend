@@ -1,6 +1,6 @@
 import express from 'express';
-import NotificationModel from '../models/Notification';
-import auth from '../middleware/auth';
+import NotificationModel from '../models/NotificationModel.js';
+import auth from '../middleware/auth.js';
 
 const router = express.Router();
 

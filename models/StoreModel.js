@@ -27,6 +27,6 @@ const storeSchema = new Schema(
   { timestamps: true }
 );
 
-const StoreModel = model("Store", storeSchema);
+const StoreModel = new mongoose.model("Store", storeSchema);
 
 export default StoreModel;

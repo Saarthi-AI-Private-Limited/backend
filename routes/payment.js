@@ -1,6 +1,6 @@
 import express from "express";
-import PaymentModel from "../models/Payment";
-import auth from "../middleware/auth";
+import PaymentModel from "../models/PaymentModel.js";
+import auth from "../middleware/auth.js";
 
 const router = express.Router();
 

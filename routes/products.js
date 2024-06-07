@@ -1,5 +1,5 @@
 import express from 'express';
-import ProductModel from '../models/Product.js';
+import ProductModel from '../models/ProductModel.js';
 import auth from '../middleware/auth.js'; // Assuming you are using the same auth middleware for Firebase
 
 const router = express.Router();
