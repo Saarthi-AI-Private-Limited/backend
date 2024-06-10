@@ -13,6 +13,7 @@ import notficationUrls from "./routes/notification.js";
 import paymentUrls from "./routes/payment.js";
 import ordersUrls from "./routes/orders.js";
 import storeUrls from "./routes/store.js";
+import chatUrls from "./routes/chat.js";
 
 dotenv.config();
 
@@ -34,5 +35,6 @@ app.use("/notification", notficationUrls);
 app.use("/payment", paymentUrls);
 app.use("/orders", ordersUrls);
 app.use("/store", storeUrls);
+app.use("/chat", chatUrls);
 
 app.listen(4000, () => console.log("Server is up and running")); // run server on port 4000
