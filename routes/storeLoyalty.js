@@ -6,69 +6,66 @@ const router = express.Router();
 
 // Earn Points
 router.post('/business/earnPoints', auth, async (req, res) => {
-  const { businessID, amountSold } = req.body;
+  const { uid } = req.user;
+  const { amountSold } = req.body;
 
   try {
-    const store = await StoreModel.findById(businessID);
+    const store = await StoreModel.findOne({ store_id: uid });
     if (!store) {
       return res.status(404).json({ msg: 'Store not found' });
     }
 
-    // Earn 1 point for every ₹1000 in sales
-    const pointsEarned = Math.floor(amountSold / 1000);
+    const pointsEarned = Math.floor(amountSold / 1000); // 1 point for every ₹1000 in sales
     store.loyaltyPoints += pointsEarned;
-
-    // Add sale to sales history
-    const sale = {
-      saleID: new mongoose.Types.ObjectId().toString(),
-      totalAmount: amountSold,
-      pointsEarned,
-    };
-    store.sales.push(sale);
-
     await store.save();
 
-    res.status(200).json({
-      pointsEarned,
-      totalPoints: store.loyaltyPoints,
-    });
+    res.status(200).json({ pointsEarned, totalPoints: store.loyaltyPoints });
   } catch (error) {
     res.status(500).send('Server error');
   }
 });
 
-// Utilize Points
+// Utilize Points for Store
 router.post('/business/utilizePoints', auth, async (req, res) => {
-  const { businessID, pointsToUtilize } = req.body;
+  const { uid } = req.user;
+  const { pointsToUtilize } = req.body;
 
   try {
-    const store = await StoreModel.findById(businessID);
+    const store = await StoreModel.findOne({ store_id: uid });
     if (!store) {
       return res.status(404).json({ msg: 'Store not found' });
     }
 
     if (store.loyaltyPoints < pointsToUtilize) {
-      return res.status(400).json({ msg: 'Insufficient points' });
+      return res.status(400).json({ msg: 'Not enough points' });
     }
 
-    // 100 points = 1 month premium feature access
-    const monthsAccess = Math.floor(pointsToUtilize / 100);
-    if (monthsAccess === 0) {
-      return res.status(400).json({ msg: 'Not enough points for premium access' });
-    }
-
-    // Update premium access date
-    const currentAccessUntil = store.premiumAccessUntil || new Date();
-    const newAccessUntil = new Date(currentAccessUntil.setMonth(currentAccessUntil.getMonth() + monthsAccess));
-    store.premiumAccessUntil = newAccessUntil;
+    // Assuming utilization gives access to a premium feature
+    const serviceAccess = 'Premium Feature';
     store.loyaltyPoints -= pointsToUtilize;
 
+    // Set premium access expiry (e.g., 1 month)
+    const premiumAccessDuration = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
+    store.premiumAccessUntil = new Date(Date.now() + premiumAccessDuration);
     await store.save();
 
-    res.status(200).json({
-      serviceAccess: `Premium access until ${store.premiumAccessUntil}`,
-      remainingPoints: store.loyaltyPoints,
-    });
+    res.status(200).json({ serviceAccess, remainingPoints: store.loyaltyPoints });
+  } catch (error) {
+    res.status(500).send('Server error');
+  }
+});
+
+
+router.get('/business/points', auth, async (req, res) => {
+  const { uid } = req.user;
+
+  try {
+    const store = await StoreModel.findOne({ store_id: uid });
+    if (!store) {
+      return res.status(404).json({ msg: 'Store not found' });
+    }
+
+    res.status(200).json({ loyaltyPoints: store.loyaltyPoints });
   } catch (error) {
     res.status(500).send('Server error');
   }
