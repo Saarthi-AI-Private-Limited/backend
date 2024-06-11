@@ -29,6 +29,8 @@ router.post('/earnPoints', auth, async (req, res) => {
   }
 });
 
+
+
 // Redeem Points
 router.post('/redeemPoints', auth, async (req, res) => {
   const { userID, pointsToRedeem } = req.body;
@@ -57,5 +59,22 @@ router.post('/redeemPoints', auth, async (req, res) => {
     res.status  .500).send('Server error');
   }
 });
+
+//to get points
+router.get('/points', auth, async (req, res) => {
+  const { uid } = req.user;
+
+  try {
+    const user = await UserModel.findOne({ firebaseUID: uid });
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    res.status(200).json({ loyaltyPoints: user.loyaltyPoints });
+  } catch (error) {
+    res.status(500).send('Server error');
+  }
+});
+
 
 export default router;
