@@ -6,57 +6,47 @@ const router = express.Router();
 
 // Earn Points
 router.post('/earnPoints', auth, async (req, res) => {
-  const { userID, amountSpent } = req.body;
+  const { uid } = req.user;
+  const { amountSpent } = req.body;
 
   try {
-    const user = await UserModel.findById(userID);
+    const user = await UserModel.findOne({ firebaseUID: uid });
     if (!user) {
       return res.status(404).json({ msg: 'User not found' });
     }
 
-    // Earn 1 point for every ₹100 spent
-    const pointsEarned = Math.floor(amountSpent / 100);
+    const pointsEarned = Math.floor(amountSpent / 100); // 1 point for every ₹100 spent
     user.loyaltyPoints += pointsEarned;
-
     await user.save();
 
-    res.status(200).json({
-      pointsEarned,
-      totalPoints: user.loyaltyPoints,
-    });
+    res.status(200).json({ pointsEarned, totalPoints: user.loyaltyPoints });
   } catch (error) {
     res.status(500).send('Server error');
   }
 });
 
-
-
-// Redeem Points
+// Redeem Points for User
 router.post('/redeemPoints', auth, async (req, res) => {
-  const { userID, pointsToRedeem } = req.body;
+  const { uid } = req.user;
+  const { pointsToRedeem } = req.body;
 
   try {
-    const user = await UserModel.findById(userID);
+    const user = await UserModel.findOne({ firebaseUID: uid });
     if (!user) {
       return res.status(404).json({ msg: 'User not found' });
     }
 
     if (user.loyaltyPoints < pointsToRedeem) {
-      return res.status(400).json({ msg: 'Insufficient points' });
+      return res.status(400).json({ msg: 'Not enough points' });
     }
 
-    // 10 points = ₹1 discount
-    const discount = pointsToRedeem / 10;
+    const discount = pointsToRedeem / 10; // 10 Points = ₹1 Discount
     user.loyaltyPoints -= pointsToRedeem;
-
     await user.save();
 
-    res.status(200).json({
-      discount,
-      remainingPoints: user.loyaltyPoints,
-    });
+    res.status(200).json({ discount, remainingPoints: user.loyaltyPoints });
   } catch (error) {
-    res.status  .500).send('Server error');
+    res.status(500).send('Server error');
   }
 });
 
