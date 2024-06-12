@@ -1,11 +1,11 @@
 import express from 'express';
-import StoreModel from '../models/Store';
-import auth from '../middleware/auth';
+import StoreModel from '../models/StoreModel.js';
+import auth from '../middleware/auth.js';
 
 const router = express.Router();
 
 // Earn Points
-router.post('/business/earnPoints', auth, async (req, res) => {
+router.post('/business/earn-points', auth, async (req, res) => {
   const { uid } = req.user;
   const { amountSold } = req.body;
 
@@ -26,7 +26,7 @@ router.post('/business/earnPoints', auth, async (req, res) => {
 });
 
 // Utilize Points for Store
-router.post('/business/utilizePoints', auth, async (req, res) => {
+router.post('/business/utilize-points', auth, async (req, res) => {
   const { uid } = req.user;
   const { pointsToUtilize } = req.body;
 

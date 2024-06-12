@@ -1,11 +1,11 @@
 import express from 'express';
-import UserModel from '../models/User';
-import auth from '../middleware/auth';
+import UserModel from '../models/UserModel.js';
+import auth from '../middleware/auth.js';
 
 const router = express.Router();
 
 // Earn Points
-router.post('/earnPoints', auth, async (req, res) => {
+router.post('/earn-points', auth, async (req, res) => {
   const { uid } = req.user;
   const { amountSpent } = req.body;
 
@@ -26,7 +26,7 @@ router.post('/earnPoints', auth, async (req, res) => {
 });
 
 // Redeem Points for User
-router.post('/redeemPoints', auth, async (req, res) => {
+router.post('/redeem-points', auth, async (req, res) => {
   const { uid } = req.user;
   const { pointsToRedeem } = req.body;
 
