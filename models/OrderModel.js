@@ -30,6 +30,20 @@ const orderSchema = new Schema(
       enum: ["done", "pending", "in progress", "cancelled"],
       required: true,
     },
+    order_type: {
+      type: String,
+      enum: [
+        "pickup",
+        "standard delivery",
+        "scheduled delivery",
+        "express delivery",
+      ],
+      required: true,
+    },
+    delivery_address: { type: String, required: true },
+    delivery_date: { type: Date, required: true },
+    delivery_time: { type: String, required: true },
+    payment_method: { type: String, required: true },
   },
   { timestamps: true }
 );
