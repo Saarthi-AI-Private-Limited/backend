@@ -24,6 +24,8 @@ mongoose.connect(
   () => console.log("Database connected")
 );
 
+const port = process.env.PORT || 4000;
+
 //to pass our incoming and outgoing request
 app.use(express.json()); //activated body parser
 app.use(express.urlencoded({ extended: true })); // support encoded bodies
@@ -39,4 +41,4 @@ app.use("/store", storeUrls);
 app.use("/chat", chatUrls);
 app.use("/home", homeUrls);
 
-app.listen(4000, () => console.log("Server is up and running")); // run server on port 4000
+app.listen(port, "0.0.0.0", () => console.log("Server is up and running")); // run server on port 4000
