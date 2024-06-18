@@ -31,6 +31,15 @@ const userSchema = new Schema(
       type: Array,
       default: [],
     },
+    loyaltyPoints: {
+      type: Number,
+      default: 0,
+    },
+    premiumAccess: {
+      type: String,
+      enum: ["true", "false"],
+      default: "false",
+    },
   },
   { timestamps: true }
 );
