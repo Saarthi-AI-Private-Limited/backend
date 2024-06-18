@@ -53,6 +53,11 @@ const storeSchema = new Schema(
     pan_no: { type: String, required: true },
     images: [imageSchema],
     videos: [videoSchema],
+    premiumAccess: {
+      type: String,
+      enum: ["true", "false"],
+      default: "false",
+    },
   },
   { timestamps: true }
 );

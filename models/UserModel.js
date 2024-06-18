@@ -4,6 +4,10 @@ const { Schema } = mongoose;
 //for signup schema
 const userSchema = new Schema(
   {
+    uid: {
+      type: String,
+      required: true,
+    },
     firstname: {
       type: String,
       required: true,
@@ -34,11 +38,6 @@ const userSchema = new Schema(
     loyaltyPoints: {
       type: Number,
       default: 0,
-    },
-    premiumAccess: {
-      type: String,
-      enum: ["true", "false"],
-      default: "false",
     },
   },
   { timestamps: true }

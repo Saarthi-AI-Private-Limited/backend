@@ -7,18 +7,25 @@ const router = express.Router();
 
 // Register a new user
 router.post("/register", async (req, res) => {
-  const { firstname, lastname, email, address, phoneNumber, password } =
+  const { firstname, lastname, email, address, phoneNumber, password, uid } =
     req.body;
 
   try {
     // Check if user already exists
-    let user = await UserModel.findOne({ email });
+    
+
+    let user = await UserModel.findOne({ phoneNumber });
+    if (user) {
+      return res.status(400).json({ msg: "User already exists" });
+    }
+    user = await UserModel.findOne({ uid });
     if (user) {
       return res.status(400).json({ msg: "User already exists" });
     }
 
     // Create new user
     user = new UserModel({
+      uid,
       firstname,
       lastname,
       email,
@@ -27,6 +34,7 @@ router.post("/register", async (req, res) => {
       password,
     });
     console.log(req.body);
+
     // Hash password
     // TODO: Add password strength validation and hashing on the frontend
 
