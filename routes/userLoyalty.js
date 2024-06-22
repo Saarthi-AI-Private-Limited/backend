@@ -10,7 +10,7 @@ router.post('/earn-points', auth, async (req, res) => {
   const { amountSpent } = req.body;
 
   try {
-    const user = await UserModel.findOne({ firebaseUID: uid });
+    const user = await UserModel.findOne({ uid: uid });
     if (!user) {
       return res.status(404).json({ msg: 'User not found' });
     }
@@ -31,7 +31,7 @@ router.post('/redeem-points', auth, async (req, res) => {
   const { pointsToRedeem } = req.body;
 
   try {
-    const user = await UserModel.findOne({ firebaseUID: uid });
+    const user = await UserModel.findOne({ uid: uid });
     if (!user) {
       return res.status(404).json({ msg: 'User not found' });
     }
@@ -55,7 +55,7 @@ router.get('/points', auth, async (req, res) => {
   const { uid } = req.user;
 
   try {
-    const user = await UserModel.findOne({ firebaseUID: uid });
+    const user = await UserModel.findOne({ uid: uid });
     if (!user) {
       return res.status(404).json({ msg: 'User not found' });
     }

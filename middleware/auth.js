@@ -8,12 +8,13 @@ admin.initializeApp({
 });
 const auth = async (req, res, next) => {
   const token = req.header("Authorization").replace("Bearer ", "");
-
   try {
     const decodedToken = await admin.auth().verifyIdToken(token);
     req.user = decodedToken;
     next();
   } catch (error) {
+    console.log(error);
+
     res.status(401).json({ msg: "Token is not valid" });
   }
 };

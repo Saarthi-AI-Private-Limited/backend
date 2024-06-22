@@ -12,7 +12,6 @@ router.post("/register", async (req, res) => {
 
   try {
     // Check if user already exists
-    
 
     let user = await UserModel.findOne({ phoneNumber });
     if (user) {
@@ -58,7 +57,7 @@ router.post("/login", async (req, res) => {
 // Fetch user profile
 router.get("/profile", auth, async (req, res) => {
   try {
-    const user = await UserModel.findOne({ email: req.user.email }).select(
+    const user = await UserModel.findOne({ uid: req.user.uid }).select(
       "-password"
     );
     res.json(user);
@@ -79,7 +78,7 @@ router.put("/profile", auth, async (req, res) => {
   if (phoneNumber) profileFields.phoneNumber = phoneNumber;
 
   try {
-    let user = await UserModel.findOne({ email: req.user.email });
+    let user = await UserModel.findOne({ uid: req.user.uid });
     if (user) {
       // Update user profile
       user = await UserModel.findByIdAndUpdate(
@@ -88,6 +87,21 @@ router.put("/profile", auth, async (req, res) => {
         { new: true }
       );
       return res.json(user);
+    }
+    res.status(404).json({ msg: "User not found" });
+  } catch (error) {
+    res.status(500).send("Server error");
+  }
+});
+
+// Delete user profile
+router.delete("/profile", auth, async (req, res) => {
+  try {
+    let user = await UserModel.findOne({ uid: req.user.uid });
+    if (user) {
+      // Delete user profile
+      await UserModel.findByIdAndDelete(user.id);
+      return res.json({ msg: "User deleted successfully" });
     }
     res.status(404).json({ msg: "User not found" });
   } catch (error) {

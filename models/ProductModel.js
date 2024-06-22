@@ -24,6 +24,22 @@ const productSchema = new Schema(
   { timestamps: true }
 );
 
+const featuredProductSchema = new Schema({
+  product_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Product",
+    required: true,
+  },
+  store_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Store",
+    required: true,
+  },
+});
+
+const FeaturedProducts = new mongoose.model("FeaturedProducts", featuredProductSchema);
+
 const ProductModel = new mongoose.model("Product", productSchema);
 
 export default ProductModel;
+export { FeaturedProducts };
