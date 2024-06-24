@@ -65,3 +65,4 @@ const storeSchema = new Schema(
 const StoreModel = new mongoose.model("Store", storeSchema);
 
 export default StoreModel;
+export { imageSchema, videoSchema };

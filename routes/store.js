@@ -1,11 +1,12 @@
-import express from 'express';
-import StoreModel from '../models/StoreModel.js';
+import express from "express";
+import StoreModel, { imageSchema, videoSchema } from "../models/StoreModel.js";
 
 const router = express.Router();
 
 // Create a new store
-router.post('/', async (req, res) => {
-  const { store_name, address, phoneNumber, email, password, gst_no, pan_no } = req.body;
+router.post("/", async (req, res) => {
+  const { store_name, address, phoneNumber, email, password, gst_no, pan_no } =
+    req.body;
 
   try {
     const newStore = new StoreModel({
@@ -21,34 +22,35 @@ router.post('/', async (req, res) => {
     const store = await newStore.save();
     res.status(201).json(store);
   } catch (error) {
-    res.status(500).send('Server error');
+    res.status(500).send("Server error");
   }
 });
 
 // Get list of stores
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const stores = await StoreModel.find();
     res.status(200).json(stores);
   } catch (error) {
-    res.status(500).send('Server error');
+    res.status(500).send("Server error");
   }
 });
 
 // Get store details by ID
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const store = await StoreModel.findById(req.params.id);
-    if (!store) return res.status(404).json({ msg: 'Store not found' });
+    if (!store) return res.status(404).json({ msg: "Store not found" });
     res.status(200).json(store);
   } catch (error) {
-    res.status(500).send('Server error');
+    res.status(500).send("Server error");
   }
 });
 
 // Update store information
-router.put('/:id', async (req, res) => {
-  const { store_name, address, phoneNumber, email, password, gst_no, pan_no } = req.body;
+router.put("/:id", async (req, res) => {
+  const { store_name, address, phoneNumber, email, password, gst_no, pan_no } =
+    req.body;
 
   const updatedStore = {};
   if (store_name) updatedStore.store_name = store_name;
@@ -61,7 +63,7 @@ router.put('/:id', async (req, res) => {
 
   try {
     let store = await StoreModel.findById(req.params.id);
-    if (!store) return res.status(404).json({ msg: 'Store not found' });
+    if (!store) return res.status(404).json({ msg: "Store not found" });
 
     store = await StoreModel.findByIdAndUpdate(
       req.params.id,
@@ -71,20 +73,56 @@ router.put('/:id', async (req, res) => {
 
     res.status(200).json(store);
   } catch (error) {
-    res.status(500).send('Server error');
+    res.status(500).send("Server error");
+  }
+});
+
+// Add photos and videos
+router.post("/:id/photos", async (req, res) => {
+  try {
+    const store = await StoreModel.findById(req.params.id);
+    if (!store) return res.status(404).json({ msg: "Store not found" });
+
+    const { images, videos } = req.body;
+
+    for (const image of images) {
+      const newImage = new imageSchema({
+        alt: image.alt,
+        caption: image.caption,
+        description: image.description,
+        url: image.url,
+        store_id: store._id,
+      });
+      store.images.push(newImage);
+    }
+    for (const video of videos) {
+      const newVideo = new videoSchema({
+        alt: video.alt,
+        caption: video.caption,
+        description: video.description,
+        url: video.url,
+        store_id: store._id,
+      });
+      store.videos.push(newVideo);
+    }
+
+    await store.save();
+    res.status(200).json(store);
+  } catch (error) {
+    res.status(500).send("Server error");
   }
 });
 
 // Delete a store
-router.delete('/:id', async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const store = await StoreModel.findById(req.params.id);
-    if (!store) return res.status(404).json({ msg: 'Store not found' });
+    if (!store) return res.status(404).json({ msg: "Store not found" });
 
     await store.remove();
-    res.status(200).json({ msg: 'Store removed' });
+    res.status(200).json({ msg: "Store removed" });
   } catch (error) {
-    res.status(500).send('Server error');
+    res.status(500).send("Server error");
   }
 });
 
