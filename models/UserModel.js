@@ -1,6 +1,59 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
+const addressSchema = new mongoose.Schema({
+  fullName: {
+    type: String,
+    required: true,
+  },
+  companyName: {
+    type: String,
+  },
+  flatNo: {
+    // Can be used for apartment/flat number
+    type: String,
+  },
+  buildingName: {
+    type: String,
+  },
+  street: {
+    type: String,
+  },
+  locality: {
+    type: String,
+  },
+  village: {
+    // Can be included for rural addresses
+    type: String,
+  },
+  city: {
+    type: String,
+    required: true,
+  },
+  district: {
+    type: String,
+    required: true,
+  },
+  state: {
+    type: String,
+    required: true,
+  },
+  pincode: {
+    type: String,
+    required: true,
+    validate: {
+      validator: (v) => /\d{6}$/.test(v),
+      message: "Pincode must be a 6-digit number",
+    },
+  },
+  phoneNumber: {
+    type: String,
+    required: true,
+  },
+  alternatePhoneNumber: {
+    type: String,
+  },
+});
 //for signup schema
 const userSchema = new Schema(
   {
@@ -16,12 +69,49 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    gender: {
+      type: String,
+      required: true,
+    },
+    dob: {
+      type: Date,
+      required: true,
+    },
     email: {
       type: String,
     },
-    address: {
+    addresses: [addressSchema],
+    // shoppinng preferences
+    typeOfProducts: {
+      type: Array,
+      enum: ["Fabric", "Eatables", "Toiletries", "Electronics", "Furniture"],
+      default: [],
+    },
+    budgetRange: {
+      type: Array,
+      default: [],
+    },
+    modeOfShopping: {
       type: String,
-      required: true,
+      enum: ["Online", "Offline"],
+    },
+    interestInEcofriendly: {
+      type: Boolean,
+      default: false,
+    },
+
+    // frequently visited places
+    locations: {
+      type: Array,
+      default: [],
+    },
+    shops: {
+      type: Array,
+      default: [],
+    },
+    restaurants: {
+      type: Array,
+      default: [],
     },
     phoneNumber: {
       type: Number,
@@ -38,6 +128,9 @@ const userSchema = new Schema(
     loyaltyPoints: {
       type: Number,
       default: 0,
+    },
+    salt: {
+      type: String,
     },
   },
   { timestamps: true }

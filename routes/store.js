@@ -96,14 +96,14 @@ router.post("/:id/photos", async (req, res) => {
       store.images.push(newImage);
     }
     for (const video of videos) {
-      const newVideo = new videoSchema({
+      const newReel = new reelSchema({
         alt: video.alt,
         caption: video.caption,
         description: video.description,
         url: video.url,
         store_id: store._id,
       });
-      store.videos.push(newVideo);
+      store.reels.push(newReel);
     }
 
     await store.save();

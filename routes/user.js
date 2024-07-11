@@ -7,8 +7,16 @@ const router = express.Router();
 
 // Register a new user
 router.post("/register", async (req, res) => {
-  const { firstname, lastname, email, address, phoneNumber, password, uid } =
-    req.body;
+  const {
+    firstname,
+    lastname,
+    email,
+    address,
+    phoneNumber,
+    password,
+    uid,
+    salt,
+  } = req.body;
 
   try {
     // Check if user already exists
@@ -22,24 +30,20 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ msg: "User already exists" });
     }
 
-    // Create new user
+    // Hash password
+    // TODO: Add password strength validation and hashing on the frontend
+
+    // Create user
     user = new UserModel({
-      uid,
       firstname,
       lastname,
       email,
       address,
       phoneNumber,
-      password,
+      uid,
+      password
+    , salt
     });
-    console.log(req.body);
-
-    // Hash password
-    // TODO: Add password strength validation and hashing on the frontend
-
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(password, salt);
-
     // Save user
     await user.save();
 
