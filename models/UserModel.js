@@ -84,7 +84,6 @@ const userSchema = new Schema(
     // shoppinng preferences
     typeOfProducts: {
       type: Array,
-      enum: ["Fabric", "Eatables", "Toiletries", "Electronics", "Furniture"],
       default: [],
     },
     budgetRange: {

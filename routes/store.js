@@ -1,5 +1,5 @@
 import express from "express";
-import StoreModel, { imageSchema, videoSchema } from "../models/StoreModel.js";
+import StoreModel, { imageSchema, reelSchema } from "../models/StoreModel.js";
 
 const router = express.Router();
 
