@@ -8,13 +8,24 @@ const router = express.Router();
 // Register a new user
 router.post("/register", async (req, res) => {
   const {
+    uid,
     firstname,
     lastname,
+    gender,
+    dob,
     email,
-    address,
+    addresses,
+    typeOfProducts,
+    budgetRange,
+    modeOfShopping,
+    interestInEcofriendly,
+    locations,
+    shops,
+    restaurants,
     phoneNumber,
     password,
-    uid,
+    orders,
+    loyaltyPoints,
     salt,
   } = req.body;
 
@@ -35,14 +46,25 @@ router.post("/register", async (req, res) => {
 
     // Create user
     user = new UserModel({
+      uid,
       firstname,
       lastname,
+      gender,
+      dob,
       email,
-      address,
+      addresses,
+      typeOfProducts,
+      budgetRange,
+      modeOfShopping,
+      interestInEcofriendly,
+      locations,
+      shops,
+      restaurants,
       phoneNumber,
-      uid,
-      password
-    , salt
+      password,
+      orders,
+      loyaltyPoints,
+      salt,
     });
     // Save user
     await user.save();
