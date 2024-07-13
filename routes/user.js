@@ -72,6 +72,8 @@ router.post("/register", async (req, res) => {
     res.status(201).send("User created successfully");
   } catch (error) {
     res.status(500).send("Server error");
+    console.log(error);
+    console.log()
   }
 });
 
