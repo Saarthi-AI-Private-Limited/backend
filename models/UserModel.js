@@ -83,12 +83,12 @@ const userSchema = new Schema(
     addresses: [addressSchema],
     // shoppinng preferences
     typeOfProducts: {
-      type: Array,
-      default: [],
+      type: String,
+      // default: [],
     },
     budgetRange: {
-      type: Array,
-      default: [],
+      type: String,
+      // default: [],
     },
     modeOfShopping: {
       type: String,
@@ -101,16 +101,16 @@ const userSchema = new Schema(
 
     // frequently visited places
     locations: {
-      type: Array,
-      default: [],
+      type: String,
+      // default: [],
     },
     shops: {
-      type: Array,
-      default: [],
+      type: String,
+      // default: [],
     },
     restaurants: {
-      type: Array,
-      default: [],
+      type: String,
+      // default: [],
     },
     phoneNumber: {
       type: Number,
