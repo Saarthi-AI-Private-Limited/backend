@@ -13,6 +13,7 @@ const priceSchema = new Schema({
 
 const productSchema = new Schema(
   {
+    product_id: { type: String, required: true },
     name: { type: String, required: true },
     category: { type: String, required: true },
     sku: { type: String, required: true },
