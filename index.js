@@ -13,6 +13,7 @@ import notficationUrls from "./routes/notification.js";
 import paymentUrls from "./routes/payment.js";
 import ordersUrls from "./routes/orders.js";
 import storeUrls from "./routes/store.js";
+import productsUrls from "./routes/products.js";
 import chatUrls from "./routes/chat.js";
 import homeUrls from "./routes/home.js";
 
@@ -40,5 +41,6 @@ app.use("/orders", ordersUrls);
 app.use("/store", storeUrls);
 app.use("/chat", chatUrls);
 app.use("/home", homeUrls);
+app.use("/products", productsUrls);
 
 app.listen(port, "0.0.0.0", () => console.log("Server is up and running")); // run server on port 4000
